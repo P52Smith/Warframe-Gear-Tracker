@@ -29,6 +29,7 @@ namespace Warframe_Gear_Tracker
 
         public List<WarframeWeapon> Weapons { get; set; } = new List<WarframeWeapon>();
         public List<WarframeWarframe> Warframes { get; set; } = new List<WarframeWarframe>();
+        public List<WarframeItem> OtherItems { get; set; } = new List<WarframeItem>();
 
         public MainWindow()
         {
@@ -56,9 +57,27 @@ namespace Warframe_Gear_Tracker
                         Warframes.Add(warframe.ToObject<WarframeWarframe>());
                     }
                 }
+                else
+                {
+                    foreach(JToken token in manifest.SelectTokens("*"))
+                    {
+                        foreach(JToken item in token.Children().ToList())
+                        {
+                            try
+                            {
+                                OtherItems.Add(item.ToObject<WarframeItem>());
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                        }
+                    }
+                }
             }
             WeaponViewer.ItemsSource = Weapons;
             WarframeViewer.ItemsSource = Warframes;
+            OtherViewer.ItemsSource = OtherItems;
 
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("Type");
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(WeaponViewer.ItemsSource);
@@ -100,6 +119,8 @@ namespace Warframe_Gear_Tracker
         private SortAdorner WeaponViewerSortAdorner = null;
         private GridViewColumnHeader WarframeViewerSortCol = null;
         private SortAdorner WarframeViewerSortAdorner = null;
+        private GridViewColumnHeader OtherViewerSortCol = null;
+        private SortAdorner OtherViewerSortAdorner = null;
 
         private void WeaponViewerColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -138,6 +159,25 @@ namespace Warframe_Gear_Tracker
             WarframeViewerSortAdorner = new SortAdorner(WarframeViewerSortCol, newDir);
             AdornerLayer.GetAdornerLayer(WarframeViewerSortCol).Add(WarframeViewerSortAdorner);
             WarframeViewer.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+        private void OtherViewerColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            string sortBy = column.Tag.ToString();
+            if (OtherViewerSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(OtherViewerSortCol).Remove(OtherViewerSortAdorner);
+                OtherViewer.Items.SortDescriptions.Clear();
+            }
+
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (OtherViewerSortCol == column && OtherViewerSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            OtherViewerSortCol = column;
+            OtherViewerSortAdorner = new SortAdorner(OtherViewerSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(OtherViewerSortCol).Add(OtherViewerSortAdorner);
+            OtherViewer.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
 
 
