@@ -31,6 +31,7 @@ namespace Warframe_Gear_Tracker
         public List<WarframeWarframe> Warframes { get; set; } = new List<WarframeWarframe>();
         public List<WarframeRelic> Relics { get; set; } = new List<WarframeRelic>();
         public List<WarframeArcane> Arcanes { get; set; } = new List<WarframeArcane>();
+        public List<WarframeRecipe> Recipes { get; set; } = new List<WarframeRecipe>();
         public List<WarframeItem> OtherItems { get; set; } = new List<WarframeItem>();
 
         public MainWindow()
@@ -57,6 +58,13 @@ namespace Warframe_Gear_Tracker
                     foreach(JToken warframe in manifest["ExportWarframes"].Children().ToList())
                     {
                         Warframes.Add(warframe.ToObject<WarframeWarframe>());
+                    }
+                }
+                else if (manifest.Children().First().First.Path == "ExportRecipes")
+                {
+                    foreach(JToken recipe in manifest["ExportRecipes"].Children().ToList())
+                    {
+                        Recipes.Add(recipe.ToObject<WarframeRecipe>());
                     }
                 }
                 else if (manifest.Children().First().First.Path == "ExportRelicArcane")
