@@ -65,7 +65,10 @@ namespace Warframe_Gear_Tracker
                     {
                         if (relic["name"].ToString().Contains("RELIC"))
                         {
-                            Relics.Add(relic.ToObject<WarframeRelic>());
+                            if (relic["uniqueName"].ToString().Contains("Platinum"))
+                            {
+                                Relics.Add(relic.ToObject<WarframeRelic>());
+                            }
                         }
                         else
                         {
