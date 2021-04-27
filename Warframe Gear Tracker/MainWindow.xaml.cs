@@ -32,6 +32,7 @@ namespace Warframe_Gear_Tracker
         public List<WarframeRelic> Relics { get; set; } = new List<WarframeRelic>();
         public List<WarframeArcane> Arcanes { get; set; } = new List<WarframeArcane>();
         public List<WarframeRecipe> Recipes { get; set; } = new List<WarframeRecipe>();
+        public List<WarframeMod> Mods { get; set; } = new List<WarframeMod>();
         public List<WarframeItem> OtherItems { get; set; } = new List<WarframeItem>();
 
         public MainWindow()
@@ -84,6 +85,13 @@ namespace Warframe_Gear_Tracker
                         }
                     }
                 }
+                else if (manifest.ContainsKey("ExportUpgrades"))
+                {
+                    foreach(JToken upgrade in manifest["ExportUpgrades"].Children().ToList())
+                    {
+                        Mods.Add(upgrade.ToObject<WarframeMod>());
+                    }
+                }
                 else
                 {
                     foreach(JToken token in manifest.SelectTokens("*"))
@@ -106,6 +114,7 @@ namespace Warframe_Gear_Tracker
             WarframeViewer.ItemsSource = Warframes;
             RelicViewer.ItemsSource = Relics;
             ArcaneViewer.ItemsSource = Arcanes;
+            ModViewer.ItemsSource = Mods;
             OtherViewer.ItemsSource = OtherItems;
 
             PropertyGroupDescription groupDescription_Type = new PropertyGroupDescription("Type");
@@ -116,6 +125,8 @@ namespace Warframe_Gear_Tracker
             view.GroupDescriptions.Add(groupDescription_Type);
             view = (CollectionView)CollectionViewSource.GetDefaultView(RelicViewer.ItemsSource);
             view.GroupDescriptions.Add(groupDescription_Tier);
+            view = (CollectionView)CollectionViewSource.GetDefaultView(ModViewer.ItemsSource);
+            view.GroupDescriptions.Add(groupDescription_Type);
 
 
         }
@@ -157,6 +168,8 @@ namespace Warframe_Gear_Tracker
         private SortAdorner RelicViewerSortAdorner = null;
         private GridViewColumnHeader ArcaneViewerSortCol = null;
         private SortAdorner ArcaneViewerSortAdorner = null;
+        private GridViewColumnHeader ModViewerSortCol = null;
+        private SortAdorner ModViewerSortAdorner = null;
 
         private void WeaponViewerColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -252,6 +265,25 @@ namespace Warframe_Gear_Tracker
             ArcaneViewerSortAdorner = new SortAdorner(ArcaneViewerSortCol, newDir);
             AdornerLayer.GetAdornerLayer(ArcaneViewerSortCol).Add(ArcaneViewerSortAdorner);
             ArcaneViewer.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+        private void ModViewerColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            string sortBy = column.Tag.ToString();
+            if (ModViewerSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(ModViewerSortCol).Remove(ModViewerSortAdorner);
+                ModViewer.Items.SortDescriptions.Clear();
+            }
+
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (ModViewerSortCol == column && ModViewerSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            ModViewerSortCol = column;
+            ModViewerSortAdorner = new SortAdorner(ModViewerSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(ModViewerSortCol).Add(ModViewerSortAdorner);
+            ModViewer.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
 
 
