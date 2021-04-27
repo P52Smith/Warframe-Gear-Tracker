@@ -74,6 +74,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="WarframeItem.cs" />
+    <Compile Include="WarframeRarity.cs" />
     <Compile Include="WarframeRelic.cs" />
     <Compile Include="WarframeRelicReward.cs" />
     <Compile Include="WarframeWarframe.cs" />
