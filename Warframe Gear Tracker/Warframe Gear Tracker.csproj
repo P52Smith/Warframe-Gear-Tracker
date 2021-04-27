@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="WarframeArcane.cs" />
     <Compile Include="WarframeItem.cs" />
     <Compile Include="WarframeRarity.cs" />
     <Compile Include="WarframeRelic.cs" />
