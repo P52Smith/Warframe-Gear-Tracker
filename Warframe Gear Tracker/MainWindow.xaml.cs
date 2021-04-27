@@ -43,7 +43,7 @@ namespace Warframe_Gear_Tracker
             foreach (string manifestPath in GetManifestPaths())
             {
                 JObject manifest = JObject.Parse( wc.DownloadString(webPath + manifestPath));
-                if (manifest.Children().First().First.Path == "ExportWeapons")
+                if (manifest.ContainsKey("ExportWeapons"))
                 {
                     foreach(JToken weapon in manifest["ExportWeapons"].Children().ToList())
                     {
@@ -53,21 +53,21 @@ namespace Warframe_Gear_Tracker
                         }
                     }
                 }
-                else if (manifest.Children().First().First.Path == "ExportWarframes")
+                else if (manifest.ContainsKey("ExportWarframes"))
                 {
                     foreach(JToken warframe in manifest["ExportWarframes"].Children().ToList())
                     {
                         Warframes.Add(warframe.ToObject<WarframeWarframe>());
                     }
                 }
-                else if (manifest.Children().First().First.Path == "ExportRecipes")
+                else if (manifest.ContainsKey("ExportRecipes"))
                 {
                     foreach(JToken recipe in manifest["ExportRecipes"].Children().ToList())
                     {
                         Recipes.Add(recipe.ToObject<WarframeRecipe>());
                     }
                 }
-                else if (manifest.Children().First().First.Path == "ExportRelicArcane")
+                else if (manifest.ContainsKey("ExportRelicArcane"))
                 {
                     foreach(JToken relic in manifest["ExportRelicArcane"].Children().ToList())
                     {
