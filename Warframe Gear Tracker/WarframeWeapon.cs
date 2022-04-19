@@ -20,7 +20,8 @@ namespace Warframe_Gear_Tracker
             SpaceGuns,
             SpaceMelee,
             SpecialItems,
-            CrewShipWeapons
+            CrewShipWeapons,
+            OperatorAmps
         }
 
         [JsonProperty("ProductCategory")]
