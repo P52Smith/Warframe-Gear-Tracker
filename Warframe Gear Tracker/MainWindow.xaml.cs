@@ -72,9 +72,9 @@ namespace Warframe_Gear_Tracker
                 {
                     foreach(JToken relic in manifest["ExportRelicArcane"].Children().ToList())
                     {
-                        if (relic["name"].ToString().Contains("RELIC"))
+                        if (relic["name"].ToString().ToLower().Contains("relic"))
                         {
-                            if (relic["uniqueName"].ToString().Contains("Platinum"))
+                            if (relic["uniqueName"].ToString().ToLower().Contains("platinum"))
                             {
                                 Relics.Add(relic.ToObject<WarframeRelic>());
                             }

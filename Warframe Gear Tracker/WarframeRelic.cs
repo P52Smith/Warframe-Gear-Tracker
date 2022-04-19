@@ -22,23 +22,23 @@ namespace Warframe_Gear_Tracker
         {
             get
             {
-                if (Name.StartsWith("LITH"))
+                if (Name.ToLower().StartsWith("lith"))
                 {
                     return Tiers.Lith;
                 }
-                else if (Name.StartsWith("MESO"))
+                else if (Name.ToLower().StartsWith("meso"))
                 {
                     return Tiers.Meso;
                 }
-                else if (Name.StartsWith("NEO"))
+                else if (Name.ToLower().StartsWith("neo"))
                 {
                     return Tiers.Neo;
                 }
-                else if (Name.StartsWith("AXI"))
+                else if (Name.ToLower().StartsWith("axi"))
                 {
                     return Tiers.Axi;
                 }
-                else if (Name.StartsWith("REQUIEM"))
+                else if (Name.ToLower().StartsWith("requiem"))
                 {
                     return Tiers.Requiem;
                 }
