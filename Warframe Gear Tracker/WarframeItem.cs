@@ -26,5 +26,6 @@ namespace Warframe_Gear_Tracker
                 }
             }
         }
+        public bool Needed { get; set; }
     }
 }
