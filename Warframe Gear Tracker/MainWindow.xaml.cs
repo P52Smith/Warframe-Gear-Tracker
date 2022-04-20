@@ -50,7 +50,12 @@ namespace Warframe_Gear_Tracker
                     {
                         if (weapon["slot"] != null)
                         {
-                            Weapons.Add(weapon.ToObject<WarframeWeapon>());
+                            WarframeWeapon theWeapon = weapon.ToObject<WarframeWeapon>();
+                            if (!App.AllItems.ContainsKey(theWeapon.UniqueName))
+                            {
+                                Weapons.Add(theWeapon);
+                                App.AllItems.Add(theWeapon.UniqueName, theWeapon);
+                            }
                         }
                     }
                 }
@@ -58,7 +63,9 @@ namespace Warframe_Gear_Tracker
                 {
                     foreach(JToken warframe in manifest["ExportWarframes"].Children().ToList())
                     {
-                        Warframes.Add(warframe.ToObject<WarframeWarframe>());
+                        WarframeWarframe theWarframe = warframe.ToObject<WarframeWarframe>();
+                        Warframes.Add(theWarframe);
+                        App.AllItems.Add(theWarframe.UniqueName, theWarframe);
                     }
                 }
                 else if (manifest.ContainsKey("ExportRecipes"))
@@ -92,7 +99,39 @@ namespace Warframe_Gear_Tracker
                         Mods.Add(upgrade.ToObject<WarframeMod>());
                     }
                 }
-                else
+                else if (manifest.ContainsKey("ExportResources"))
+                {
+                    foreach(JToken resource in manifest["ExportResources"].Children().ToList())
+                    {
+                        WarframeItem theItem = resource.ToObject<WarframeItem>();
+                        App.AllItems.Add(theItem.UniqueName, theItem);
+                    }
+                }
+                else if (manifest.ContainsKey("ExportGear"))
+                {
+                    foreach (JToken gear in manifest["ExportGear"].Children().ToList())
+                    {
+                        WarframeItem theItem = gear.ToObject<WarframeItem>();
+                        App.AllItems.Add(theItem.UniqueName, theItem);
+                    }
+                }
+                else if (manifest.ContainsKey("ExportDrones"))
+                {
+                    foreach (JToken drone in manifest["ExportDrones"].Children().ToList())
+                    {
+                        WarframeItem theItem = drone.ToObject<WarframeItem>();
+                        App.AllItems.Add(theItem.UniqueName, theItem);
+                    }
+                }
+                else if (manifest.ContainsKey("ExportKeys"))
+                {
+                    foreach (JToken key in manifest["ExportKeys"].Children().ToList())
+                    {
+                        WarframeItem theItem = key.ToObject<WarframeItem>();
+                        App.AllItems.Add(theItem.UniqueName, theItem);
+                    }
+                }
+                else if (!manifest.ContainsKey("EportSortieRewards"))
                 {
                     foreach(JToken token in manifest.SelectTokens("*"))
                     {
@@ -100,7 +139,13 @@ namespace Warframe_Gear_Tracker
                         {
                             try
                             {
-                                OtherItems.Add(item.ToObject<WarframeItem>());
+                                WarframeItem theItem = item.ToObject<WarframeItem>();
+                                OtherItems.Add(theItem);
+                                if (theItem.UniqueName is null)
+                                {
+                                    MessageBox.Show(item.ToString());
+                                }
+                                //App.AllItems.Add(theItem.UniqueName, theItem);
                             }
                             catch (Exception)
                             {
@@ -115,6 +160,7 @@ namespace Warframe_Gear_Tracker
             RelicViewer.ItemsSource = Relics;
             ArcaneViewer.ItemsSource = Arcanes;
             ModViewer.ItemsSource = Mods;
+            RecipeViewer.ItemsSource = Recipes;
             OtherViewer.ItemsSource = OtherItems;
 
             PropertyGroupDescription groupDescription_Type = new PropertyGroupDescription("Type");
@@ -170,6 +216,8 @@ namespace Warframe_Gear_Tracker
         private SortAdorner ArcaneViewerSortAdorner = null;
         private GridViewColumnHeader ModViewerSortCol = null;
         private SortAdorner ModViewerSortAdorner = null;
+        private GridViewColumnHeader RecipeViewerSortCol = null;
+        private SortAdorner RecipeViewerSortAdorner = null;
 
         private void WeaponViewerColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -284,6 +332,26 @@ namespace Warframe_Gear_Tracker
             ModViewerSortAdorner = new SortAdorner(ModViewerSortCol, newDir);
             AdornerLayer.GetAdornerLayer(ModViewerSortCol).Add(ModViewerSortAdorner);
             ModViewer.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+
+        private void RecipeViewerColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader column = (sender as GridViewColumnHeader);
+            string sortBy = column.Tag.ToString();
+            if (RecipeViewerSortCol != null)
+            {
+                AdornerLayer.GetAdornerLayer(RecipeViewerSortCol).Remove(RecipeViewerSortAdorner);
+                RecipeViewer.Items.SortDescriptions.Clear();
+            }
+
+            ListSortDirection newDir = ListSortDirection.Ascending;
+            if (RecipeViewerSortCol == column && RecipeViewerSortAdorner.Direction == newDir)
+                newDir = ListSortDirection.Descending;
+
+            RecipeViewerSortCol = column;
+            RecipeViewerSortAdorner = new SortAdorner(RecipeViewerSortCol, newDir);
+            AdornerLayer.GetAdornerLayer(RecipeViewerSortCol).Add(RecipeViewerSortAdorner);
+            RecipeViewer.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
 
 

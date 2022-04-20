@@ -13,5 +13,6 @@ namespace Warframe_Gear_Tracker
     /// </summary>
     public partial class App : Application
     {
+        public static Dictionary<string, WarframeItem> AllItems { get; set; } = new Dictionary<string, WarframeItem>();
     }
 }

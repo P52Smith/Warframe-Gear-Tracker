@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="WarframeArcane.cs" />
+    <Compile Include="WarframeIngredient.cs" />
     <Compile Include="WarframeItem.cs" />
     <Compile Include="WarframeMod.cs" />
     <Compile Include="WarframeRarity.cs" />
